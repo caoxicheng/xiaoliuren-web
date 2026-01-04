@@ -1,0 +1,412 @@
+/* ==================== 全局样式 ==================== */
+:root {
+    --primary-color: #2C3E50;
+    --accent-color: #F39C12;
+    --success-color: #27AE60;
+    --warning-color: #E67E22;
+    --danger-color: #E74C3C;
+    --bg-color: #F8F9FA;
+    --card-bg: #FFFFFF;
+    --text-color: #2C3E50;
+    --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==================== 容器 ==================== */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    width: 100%;
+}
+
+/* ==================== 页面头部 ==================== */
+.header {
+    background: linear-gradient(135deg, var(--primary-color), #34495E);
+    color: white;
+    padding: 40px 0;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.header .subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* ==================== 主内容区 ==================== */
+main {
+    flex: 1;
+    padding-bottom: 40px;
+}
+
+/* ==================== 起卦按钮区 ==================== */
+.divination-section {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.divination-btn {
+    display: inline-block;
+    padding: 20px 60px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, var(--accent-color), #E67E22);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.divination-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.divination-btn:active {
+    transform: translateY(0);
+}
+
+.divination-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ==================== 卡片样式 ==================== */
+.card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.card-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: var(--primary-color);
+    border-left: 4px solid var(--accent-color);
+    padding-left: 12px;
+}
+
+/* ==================== 时间信息 ==================== */
+.time-info p {
+    margin: 8px 0;
+    font-size: 1rem;
+}
+
+.time-info strong {
+    color: var(--primary-color);
+    margin-right: 8px;
+}
+
+/* ==================== 卦象结果 ==================== */
+.gua-result {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.liushen-item {
+    padding: 16px;
+    background: #F8F9FA;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-color);
+    transition: all 0.3s ease;
+}
+
+.liushen-item:hover {
+    background: #F0F1F3;
+    transform: translateX(4px);
+}
+
+.liushen-item.main {
+    border-left-color: var(--danger-color);
+    background: #FFF5F5;
+}
+
+.liushen-item.main:hover {
+    background: #FFE8E8;
+}
+
+.liushen-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.liushen-label {
+    font-size: 0.9rem;
+    color: #7F8C8D;
+    margin-bottom: 4px;
+}
+
+.liushen-details {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #E0E0E0;
+}
+
+.liushen-details p {
+    margin: 6px 0;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+/* ==================== 吉凶标签 ==================== */
+.jixiong-container {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.jixiong-badge {
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1.3rem;
+    box-shadow: var(--shadow);
+}
+
+.jixiong-badge.吉,
+.jixiong-badge.大吉 {
+    background: var(--success-color);
+    color: white;
+}
+
+.jixiong-badge.小吉 {
+    background: #52C41A;
+    color: white;
+}
+
+.jixiong-badge.平 {
+    background: var(--warning-color);
+    color: white;
+}
+
+.jixiong-badge.凶,
+.jixiong-badge.大凶 {
+    background: var(--danger-color);
+    color: white;
+}
+
+/* ==================== 解读文本 ==================== */
+.analysis-text,
+.advice-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #555;
+    padding: 12px;
+    background: #F8F9FA;
+    border-radius: 8px;
+}
+
+.advice-text {
+    background: #FFF9E6;
+    border-left: 4px solid var(--accent-color);
+}
+
+/* ==================== 历史记录 ==================== */
+.history-section {
+    margin-top: 40px;
+}
+
+.history-toggle-btn {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 20px;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.history-toggle-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.history-list {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.history-item {
+    padding: 16px;
+    margin-bottom: 12px;
+    background: #F8F9FA;
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.history-item:hover {
+    background: #F0F1F3;
+    transform: translateX(4px);
+}
+
+.history-item-info {
+    flex: 1;
+}
+
+.history-item-time {
+    font-size: 0.9rem;
+    color: #7F8C8D;
+    margin-bottom: 4px;
+}
+
+.history-item-result {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.history-item-delete {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    color: var(--danger-color);
+    background: white;
+    border: 1px solid var(--danger-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.history-item-delete:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
+/* ==================== 页面底部 ==================== */
+.footer {
+    background: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: auto;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* ==================== 工具类 ==================== */
+.hidden {
+    display: none !important;
+}
+
+/* ==================== 动画效果 ==================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.pulse {
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* ==================== 响应式设计 ==================== */
+/* 移动端 */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .header .subtitle {
+        font-size: 1rem;
+    }
+
+    .divination-btn {
+        width: 100%;
+        padding: 18px 40px;
+        font-size: 1.3rem;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    .liushen-name {
+        font-size: 1.3rem;
+    }
+
+    .jixiong-badge {
+        font-size: 1.1rem;
+        padding: 10px 24px;
+    }
+}
+
+/* 平板 */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        padding: 16px;
+    }
+}
