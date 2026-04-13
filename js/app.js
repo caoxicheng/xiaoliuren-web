@@ -337,6 +337,8 @@ function handleDeleteRecord(id) {
  * 调用 AI 深度解读
  * @param {Object} result - 占卜结果
  */
+const AI_WORKER_URL = 'https://xiaoliuren-ai.dove-justdoit.workers.dev/api/divination';
+
 async function fetchAIAnalysis(result) {
     const aiSection = document.getElementById('ai-section');
     const aiLoading = document.getElementById('ai-loading');
@@ -349,7 +351,7 @@ async function fetchAIAnalysis(result) {
     aiError.style.display = 'none';
 
     try {
-        const response = await fetch('/api/divination', {
+        const response = await fetch(AI_WORKER_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
