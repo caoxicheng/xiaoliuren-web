@@ -20,7 +20,7 @@ function saveDivinationRecord(record) {
                 year: record.lunarDate.getYear(),
                 month: record.lunarDate.getMonth(),
                 day: record.lunarDate.getDay(),
-                isLeap: record.lunarDate.isLeap
+                isLeap: record.lunarDate.getIsLeap ? record.lunarDate.getIsLeap() : record.lunarDate.isLeap
             };
         }
 

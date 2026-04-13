@@ -77,7 +77,7 @@ function performDivination() {
             year: lunar.getYear(),
             month: lunar.getMonth(),
             day: lunar.getDay(),
-            isLeap: lunar.isLeap
+            isLeap: lunar.getIsLeap()
         },
         shichen: shichen.name,
         gua: gua
