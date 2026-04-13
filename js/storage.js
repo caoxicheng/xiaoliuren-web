@@ -11,9 +11,18 @@ function saveDivinationRecord(record) {
     try {
         const history = getHistory();
 
-        // 添加时间戳和ID
+        // 添加时间戳和ID（lunarDate 转为纯对象，避免 JSON.stringify 丢失方法）
         record.id = Date.now();
         record.timestamp = new Date().toISOString();
+        // lunar-javascript 对象不可序列化，需手动提取
+        if (record.lunarDate && record.lunarDate.getYear) {
+            record.lunarDate = {
+                year: record.lunarDate.getYear(),
+                month: record.lunarDate.getMonth(),
+                day: record.lunarDate.getDay(),
+                isLeap: record.lunarDate.isLeap
+            };
+        }
 
         // 添加到历史记录开头
         history.unshift(record);

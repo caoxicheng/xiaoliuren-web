@@ -14,6 +14,11 @@ function initApp() {
     // 绑定历史记录按钮
     document.getElementById('history-toggle-btn').addEventListener('click', toggleHistory);
 
+    // 绑定事项选择快捷键
+    document.getElementById('matter-select').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleDivination();
+    });
+
     // 加载历史记录
     loadHistory();
 }
@@ -49,6 +54,14 @@ function sleep(ms) {
  * 处理起卦按钮点击
  */
 async function handleDivination() {
+    // 验证事项选择
+    const matter = document.getElementById('matter-select').value;
+    if (!matter) {
+        alert('请先选择您想问的事项类型');
+        document.getElementById('matter-select').focus();
+        return;
+    }
+
     const btn = document.getElementById('divination-btn');
     btn.disabled = true;
     btn.textContent = '起卦中...';
@@ -61,6 +74,7 @@ async function handleDivination() {
 
     // 执行起卦
     const result = performDivination();
+    result.matter = matter;
 
     // 渲染结果
     renderResult(result);
@@ -79,6 +93,9 @@ async function handleDivination() {
     document.getElementById('result-section').scrollIntoView({
         behavior: 'smooth'
     });
+
+    // 调用 AI 深度解读
+    fetchAIAnalysis(result);
 }
 
 /**
@@ -313,6 +330,53 @@ function handleDeleteRecord(id) {
     if (confirm('确定要删除这条记录吗？')) {
         deleteRecord(id);
         loadHistory();
+    }
+}
+
+/**
+ * 调用 AI 深度解读
+ * @param {Object} result - 占卜结果
+ */
+async function fetchAIAnalysis(result) {
+    const aiSection = document.getElementById('ai-section');
+    const aiLoading = document.getElementById('ai-loading');
+    const aiResult = document.getElementById('ai-result');
+    const aiError = document.getElementById('ai-error');
+
+    aiSection.style.display = 'block';
+    aiLoading.style.display = 'flex';
+    aiResult.style.display = 'none';
+    aiError.style.display = 'none';
+
+    try {
+        const response = await fetch('/api/divination', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                gua: result.gua,
+                question: result.matter,
+                liushenDetails: LIUSHEN_DETAILS
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`请求失败: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        aiLoading.style.display = 'none';
+        aiResult.style.display = 'block';
+        aiResult.innerHTML = `<div class="ai-content">${data.reply.replace(/\n/g, '<br>')}</div>`;
+
+    } catch (err) {
+        aiLoading.style.display = 'none';
+        aiError.style.display = 'block';
+        aiError.textContent = `AI 解读暂时不可用（${err.message}），可稍后重试或使用基础解读。`;
     }
 }
 

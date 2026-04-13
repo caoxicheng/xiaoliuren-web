@@ -1,0 +1,24 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# wrangler
+.wrangler/
+dist/
+
+# Node (if any)
+node_modules/
+
+# Local env (never commit API keys)
+.env
+.env.local
+.env.*.local

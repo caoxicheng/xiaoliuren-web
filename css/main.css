@@ -62,6 +62,99 @@ main {
     padding-bottom: 40px;
 }
 
+/* ==================== 事项选择 ==================== */
+.matter-section {
+    text-align: center;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.matter-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.matter-select {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: var(--text-color);
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%232C3E50' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+}
+
+.matter-select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(243,156,18,0.2);
+}
+
+.matter-select:hover {
+    border-color: var(--accent-color);
+}
+
+/* ==================== AI 解读 ==================== */
+#ai-section {
+    border-left: 4px solid #9333EA;
+}
+
+#ai-section .card-title {
+    color: #9333EA;
+    border-left-color: #9333EA;
+}
+
+.ai-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.ai-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #e0e0e0;
+    border-top-color: #9333EA;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.ai-result {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: #444;
+}
+
+.ai-content {
+    padding: 4px 0;
+}
+
+.ai-error {
+    color: var(--danger-color);
+    font-size: 0.9rem;
+    padding: 12px;
+    background: #FEF2F2;
+    border-radius: 8px;
+}
+
 /* ==================== 起卦按钮区 ==================== */
 .divination-section {
     text-align: center;

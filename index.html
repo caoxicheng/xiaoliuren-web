@@ -19,6 +19,23 @@
 
     <!-- 主内容区 -->
     <main class="container">
+        <!-- 事项选择区 -->
+        <section class="matter-section">
+            <label for="matter-select" class="matter-label">我想问：</label>
+            <select id="matter-select" class="matter-select">
+                <option value="">-- 请选择事项类型 --</option>
+                <option value="求财">求财</option>
+                <option value="出行">出行</option>
+                <option value="婚姻感情">婚姻感情</option>
+                <option value="疾病健康">疾病健康</option>
+                <option value="失物寻找">失物寻找</option>
+                <option value="诉讼官司">诉讼官司</option>
+                <option value="考试学业">考试学业</option>
+                <option value="事业工作">事业工作</option>
+                <option value="综合">综合（所有事项）</option>
+            </select>
+        </section>
+
         <!-- 起卦按钮区 -->
         <section class="divination-section">
             <button id="divination-btn" class="divination-btn">
@@ -43,6 +60,17 @@
                 <div id="gua-result" class="gua-result">
                     <!-- 动态生成卦象内容 -->
                 </div>
+            </div>
+
+            <!-- AI 解读区 -->
+            <div class="card" id="ai-section" style="display:none;">
+                <h2 class="card-title">AI 深度解读</h2>
+                <div id="ai-loading" class="ai-loading" style="display:none;">
+                    <div class="ai-spinner"></div>
+                    <span>AI 解读中...</span>
+                </div>
+                <div id="ai-result" class="ai-result"></div>
+                <div id="ai-error" class="ai-error" style="display:none;"></div>
             </div>
 
             <!-- 综合解读 -->
