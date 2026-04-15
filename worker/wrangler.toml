@@ -2,10 +2,9 @@ name = "xiaoliuren-ai"
 main = "index.js"
 compatibility_date = "2024-01-01"
 
-# 本地开发测试用
-# 开发时运行: wrangler dev --local
-# 部署时运行: wrangler deploy
-
 [vars]
-# 可以在这里放默认值（不推荐放 secrets）
 ENVIRONMENT = "production"
+
+[[kv_namespaces]]
+binding = "COUNTER_KV"
+id = "812f4b1fc3ee4753a1df94ed59021e77"

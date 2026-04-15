@@ -1,54 +1,106 @@
 /**
  * 小六壬 AI 解读 Worker（流式版）
- * 接收卦象数据，调用大模型进行专业解读
+ * POST /api/divination - 起卦+AI解读（同时增加计数）
+ * GET  /api/count      - 获取访问人次
  */
+
+const CORS_HEADERS = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*'
+};
+
+const CORS_STREAM_HEADERS = {
+  'Content-Type': 'text/plain; charset=utf-8',
+  'Access-Control-Allow-Origin': '*',
+  'Transfer-Encoding': 'chunked'
+};
 
 export default {
   async fetch(request, env) {
+    const method = request.method;
+
     // CORS 预检
-    if (request.method === 'OPTIONS') {
+    if (method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type',
           'Access-Control-Max-Age': '86400'
         }
       });
     }
 
-    // 只允许 POST
-    if (request.method !== 'POST') {
-      return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-        status: 405,
-        headers: { 'Content-Type': 'application/json' }
-      });
+    // GET /api/count - 返回访问人次
+    if (method === 'GET') {
+      const url = new URL(request.url);
+      if (url.pathname === '/api/count') {
+        const count = await env.COUNTER_KV.get('visit_count');
+        return new Response(JSON.stringify({ count: parseInt(count || '0') }), {
+          status: 200,
+          headers: CORS_HEADERS
+        });
+      }
     }
 
-    try {
-      const body = await request.json();
-      const { gua, question, liushenDetails } = body;
+    // POST /api/divination - 起卦+计数
+    if (method === 'POST') {
+      const url = new URL(request.url);
 
-      if (!gua || !question) {
-        return new Response(JSON.stringify({ error: 'Missing required fields' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
+      // 计数接口
+      if (url.pathname === '/api/count') {
+        const count = await env.COUNTER_KV.get('visit_count');
+        const newCount = (parseInt(count || '0') + 1).toString();
+        await env.COUNTER_KV.put('visit_count', newCount);
+        return new Response(JSON.stringify({ count: parseInt(newCount) }), {
+          status: 200,
+          headers: CORS_HEADERS
         });
       }
 
-      // 六神口诀
-      const poems = {
-        '大安': '大安事事昌，求财在坤方，失物去不远，宅舍保安康。行人身未动，病者主无妨，将军回田野，仔细更推详。',
-        '留连': '留连事难成，求谋日未明，官事只宜缓，去者未回程。失物南方见，急讨方心称，更须防口舌，人口且平平。',
-        '速喜': '速喜喜来临，求财向南行，失物申未午，逢人路上寻。官事有福德，病者无祸侵，田宅六畜吉，行人有信音。',
-        '赤口': '赤口主口舌，官非切要防，失物速速讨，行人有惊慌。六畜多作怪，病者出西方，更须防咒诅，诚恐染瘟疫。',
-        '小吉': '小吉最吉昌，路上好商量，阴人来报喜，失物在坤方。行人即便至，交关甚是强，凡事皆和合，病者叩穹苍。',
-        '空亡': '空亡事不祥，阴人多乖张，求财无利益，行人有灾殃。失物寻不见，官事有刑伤，病人逢暗鬼，解禳保安康。'
-      };
+      // 解读接口
+      if (url.pathname === '/api/divination') {
+        return handleDivination(request, env);
+      }
+    }
 
-      // 构建 Prompt
-      const systemPrompt = `你是小六壬占卜师，用通俗易懂的语言解读卦象。
+    return new Response(JSON.stringify({ error: 'Not found' }), {
+      status: 404,
+      headers: CORS_HEADERS
+    });
+  }
+};
+
+async function handleDivination(request, env) {
+  try {
+    const body = await request.json();
+    const { gua, question, liushenDetails } = body;
+
+    if (!gua || !question) {
+      return new Response(JSON.stringify({ error: 'Missing required fields' }), {
+        status: 400,
+        headers: CORS_HEADERS
+      });
+    }
+
+    // 增加访问计数（异步，不阻塞主流程）
+    env.COUNTER_KV.get('visit_count').then(async (count) => {
+      const newCount = (parseInt(count || '0') + 1).toString();
+      await env.COUNTER_KV.put('visit_count', newCount);
+    }).catch(() => {});
+
+    // 六神口诀
+    const poems = {
+      '大安': '大安事事昌，求财在坤方，失物去不远，宅舍保安康。行人身未动，病者主无妨，将军回田野，仔细更推详。',
+      '留连': '留连事难成，求谋日未明，官事只宜缓，去者未回程。失物南方见，急讨方心称，更须防口舌，人口且平平。',
+      '速喜': '速喜喜来临，求财向南行，失物申未午，逢人路上寻。官事有福德，病者无祸侵，田宅六畜吉，行人有信音。',
+      '赤口': '赤口主口舌，官非切要防，失物速速讨，行人有惊慌。六畜多作怪，病者出西方，更须防咒诅，诚恐染瘟疫。',
+      '小吉': '小吉最吉昌，路上好商量，阴人来报喜，失物在坤方。行人即便至，交关甚是强，凡事皆和合，病者叩穹苍。',
+      '空亡': '空亡事不祥，阴人多乖张，求财无利益，行人有灾殃。失物寻不见，官事有刑伤，病人逢暗鬼，解禳保安康。'
+    };
+
+    const systemPrompt = `你是小六壬占卜师，用通俗易懂的语言解读卦象。
 
 六神基础信息：
 - 大安：吉。平稳安宁，会有贵人帮忙，事情顺利
@@ -73,11 +125,11 @@ export default {
 4. 适当引用古诀增加趣味，但要用大白话解释
 5. 控制字数，简洁有力，不要啰嗦`;
 
-      const matterGuidance = liushenDetails && liushenDetails[gua.shiGong]
-        ? `问题类型：${question}，主卦是${gua.shiGong}。`
-        : '';
+    const matterGuidance = liushenDetails && liushenDetails[gua.shiGong]
+      ? `问题类型：${question}，主卦是${gua.shiGong}。`
+      : '';
 
-      const userPrompt = `问题：${question}
+    const userPrompt = `问题：${question}
 
 卦象：
 - 月宫：${gua.yueGong}
@@ -94,107 +146,97 @@ ${matterGuidance}
 
 要口语化，像朋友聊天那样说，不要写成学术论文。`;
 
-      // 判断是否配置了 DEEPSEEK_API_KEY
-      const hasApiKey = env.DEEPSEEK_API_KEY && env.DEEPSEEK_API_KEY.trim() !== '';
+    const hasApiKey = env.DEEPSEEK_API_KEY && env.DEEPSEEK_API_KEY.trim() !== '';
 
-      if (!hasApiKey) {
-        return new Response(JSON.stringify({
-          error: '未配置 DEEPSEEK_API_KEY，请先在 Cloudflare Worker 环境变量中配置。'
-        }), {
-          status: 503,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          }
-        });
-      }
-
-      // 流式调用 DeepSeek
-      const apiResponse = await fetch('https://api.deepseek.com/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${env.DEEPSEEK_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userPrompt }
-          ],
-          temperature: 0.7,
-          max_tokens: 900,
-          stream: true
-        })
-      });
-
-      if (!apiResponse.ok) {
-        const err = await apiResponse.text();
-        return new Response(JSON.stringify({ error: 'DeepSeek API error', detail: err }), {
-          status: 502,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-        });
-      }
-
-      // 将 DeepSeek 的 SSE 流转换为普通流式输出
-      const stream = new ReadableStream({
-        async start(controller) {
-          const reader = apiResponse.body.getReader();
-          const decoder = new TextDecoder();
-          const encoder = new TextEncoder();
-          let buffer = '';
-
-          try {
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
-
-              buffer += decoder.decode(value, { stream: true });
-              const lines = buffer.split('\n');
-              buffer = lines.pop() || '';
-
-              for (const line of lines) {
-                const trimmed = line.trim();
-                if (!trimmed || !trimmed.startsWith('data:')) continue;
-
-                const data = trimmed.slice(5).trim();
-                if (data === '[DONE]') {
-                  controller.close();
-                  return;
-                }
-
-                try {
-                  const parsed = JSON.parse(data);
-                  const content = parsed.choices?.[0]?.delta?.content;
-                  if (content) {
-                    controller.enqueue(encoder.encode(content));
-                  }
-                } catch (e) {
-                  // 忽略解析失败的行
-                }
-              }
-            }
-            controller.close();
-          } catch (err) {
-            controller.error(err);
-          }
-        }
-      });
-
-      return new Response(stream, {
-        status: 200,
-        headers: {
-          'Content-Type': 'text/plain; charset=utf-8',
-          'Access-Control-Allow-Origin': '*',
-          'Transfer-Encoding': 'chunked'
-        }
-      });
-
-    } catch (err) {
-      return new Response(JSON.stringify({ error: err.message }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    if (!hasApiKey) {
+      return new Response(JSON.stringify({
+        error: '未配置 DEEPSEEK_API_KEY，请先在 Cloudflare Worker 环境变量中配置。'
+      }), {
+        status: 503,
+        headers: CORS_HEADERS
       });
     }
+
+    const apiResponse = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${env.DEEPSEEK_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 900,
+        stream: true
+      })
+    });
+
+    if (!apiResponse.ok) {
+      const err = await apiResponse.text();
+      return new Response(JSON.stringify({ error: 'DeepSeek API error', detail: err }), {
+        status: 502,
+        headers: CORS_HEADERS
+      });
+    }
+
+    // 将 DeepSeek 的 SSE 流转换为普通流式输出
+    const stream = new ReadableStream({
+      async start(controller) {
+        const reader = apiResponse.body.getReader();
+        const decoder = new TextDecoder();
+        const encoder = new TextEncoder();
+        let buffer = '';
+
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (!trimmed || !trimmed.startsWith('data:')) continue;
+
+              const data = trimmed.slice(5).trim();
+              if (data === '[DONE]') {
+                controller.close();
+                return;
+              }
+
+              try {
+                const parsed = JSON.parse(data);
+                const content = parsed.choices?.[0]?.delta?.content;
+                if (content) {
+                  controller.enqueue(encoder.encode(content));
+                }
+              } catch (e) {
+                // 忽略解析失败的行
+              }
+            }
+          }
+          controller.close();
+        } catch (err) {
+          controller.error(err);
+        }
+      }
+    });
+
+    return new Response(stream, {
+      status: 200,
+      headers: CORS_STREAM_HEADERS
+    });
+
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: CORS_HEADERS
+    });
   }
-};
+}

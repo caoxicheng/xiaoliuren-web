@@ -21,6 +21,9 @@ function initApp() {
 
     // 加载历史记录
     loadHistory();
+
+    // 获取访问人次
+    fetchVisitCount();
 }
 
 /**
@@ -96,6 +99,9 @@ async function handleDivination() {
 
     // 调用 AI 深度解读
     fetchAIAnalysis(result);
+
+    // 增加访问计数
+    incrementVisitCount();
 }
 
 /**
@@ -338,6 +344,31 @@ function handleDeleteRecord(id) {
  * @param {Object} result - 占卜结果
  */
 const AI_WORKER_URL = 'https://xiaoliuren-ai.dove-justdoit.workers.dev/api/divination';
+const COUNT_URL = 'https://xiaoliuren-ai.dove-justdoit.workers.dev/api/count';
+
+/**
+ * 获取并显示访问人次
+ */
+async function fetchVisitCount() {
+    try {
+        const res = await fetch(COUNT_URL);
+        const data = await res.json();
+        document.getElementById('count-number').textContent = data.count.toLocaleString();
+    } catch (e) {
+        document.getElementById('count-number').textContent = '--';
+    }
+}
+
+/**
+ * 增加访问计数（起卦时调用）
+ */
+async function incrementVisitCount() {
+    try {
+        await fetch(COUNT_URL, { method: 'POST' });
+    } catch (e) {
+        // 静默失败，不影响主流程
+    }
+}
 
 async function fetchAIAnalysis(result) {
     const aiSection = document.getElementById('ai-section');
