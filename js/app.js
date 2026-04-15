@@ -365,15 +365,39 @@ async function fetchAIAnalysis(result) {
             throw new Error(`请求失败: ${response.status}`);
         }
 
-        const data = await response.json();
+        const contentType = response.headers.get('content-type') || '';
 
-        if (data.error) {
-            throw new Error(data.error);
+        if (contentType.includes('text/plain') || contentType.includes('text/event-stream')) {
+            // 流式响应
+            aiLoading.style.display = 'none';
+            aiResult.style.display = 'block';
+            aiResult.innerHTML = '<div class="ai-content" id="ai-content-stream"></div>';
+            const streamEl = document.getElementById('ai-content-stream');
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                buffer += decoder.decode(value, { stream: true });
+                // 用 textContent 追加原始文本，再用 marked 渲染
+                streamEl.textContent = buffer;
+                // 避免频繁重渲染，缓冲一些内容再更新
+                if (buffer.length > 50 || done) {
+                    aiResult.innerHTML = '<div class="ai-content">' + marked.parse(buffer) + '</div>';
+                }
+            }
+        } else {
+            // 非流式 JSON 响应（兼容旧版）
+            const data = await response.json();
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            aiLoading.style.display = 'none';
+            aiResult.style.display = 'block';
+            aiResult.innerHTML = `<div class="ai-content">${marked.parse(data.reply)}</div>`;
         }
-
-        aiLoading.style.display = 'none';
-        aiResult.style.display = 'block';
-        aiResult.innerHTML = `<div class="ai-content">${data.reply.replace(/\n/g, '<br>')}</div>`;
 
     } catch (err) {
         aiLoading.style.display = 'none';

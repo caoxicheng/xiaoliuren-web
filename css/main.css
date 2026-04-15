@@ -1,15 +1,16 @@
 /* ==================== 全局样式 ==================== */
 :root {
-    --primary-color: #2C3E50;
-    --accent-color: #F39C12;
-    --success-color: #27AE60;
-    --warning-color: #E67E22;
-    --danger-color: #E74C3C;
-    --bg-color: #F8F9FA;
-    --card-bg: #FFFFFF;
-    --text-color: #2C3E50;
-    --shadow: 0 2px 8px rgba(0,0,0,0.1);
-    --shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
+    --primary-color: #8B0000;      /* 深红 */
+    --accent-color: #C9A227;      /* 金色 */
+    --success-color: #2D5016;    /* 墨绿 */
+    --warning-color: #B8860B;    /* 暗金 */
+    --danger-color: #5C0000;     /* 暗红 */
+    --bg-color: #F5F0E8;          /* 米黄宣纸色 */
+    --card-bg: #FFFEF7;           /* 象牙白 */
+    --text-color: #2C2C2C;       /* 墨黑 */
+    --border-color: #D4C5A9;     /* 古铜 */
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
 }
 
 * {
@@ -19,165 +20,167 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Serif CJK SC", serif;
     background: var(--bg-color);
     color: var(--text-color);
-    line-height: 1.6;
+    line-height: 1.8;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
+/* 宣纸纹理背景 */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(200,180,140,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(180,150,100,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
 /* ==================== 容器 ==================== */
 .container {
-    max-width: 800px;
+    max-width: 720px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 20px 24px;
     width: 100%;
 }
 
 /* ==================== 页面头部 ==================== */
 .header {
-    background: linear-gradient(135deg, var(--primary-color), #34495E);
-    color: white;
-    padding: 40px 0;
+    background: linear-gradient(180deg, var(--primary-color) 0%, #6B0000 100%);
+    color: var(--accent-color);
+    padding: 48px 0 40px;
     text-align: center;
-    box-shadow: var(--shadow);
+    position: relative;
+    box-shadow: 0 4px 20px rgba(139,0,0,0.3);
 }
 
+.header::before,
+.header::after {
+    content: '☯';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    opacity: 0.4;
+}
+.header::before { left: 24px; }
+.header::after { right: 24px; }
+
 .header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+    font-size: 2.8rem;
     font-weight: 700;
+    letter-spacing: 0.15em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    margin-bottom: 8px;
+    color: #FFE4B5;
 }
 
 .header .subtitle {
     font-size: 1.1rem;
-    opacity: 0.9;
+    opacity: 0.85;
+    letter-spacing: 0.3em;
+    font-style: italic;
 }
 
 /* ==================== 主内容区 ==================== */
 main {
     flex: 1;
-    padding-bottom: 40px;
+    padding-bottom: 60px;
 }
 
 /* ==================== 事项选择 ==================== */
 .matter-section {
     text-align: center;
-    margin: 20px 0;
+    margin: 28px 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 16px;
 }
 
 .matter-label {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     font-weight: 600;
     color: var(--primary-color);
+    letter-spacing: 0.05em;
 }
 
 .matter-select {
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 1rem;
     color: var(--text-color);
-    background: white;
-    border: 2px solid var(--primary-color);
-    border-radius: 25px;
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%232C3E50' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238B0000' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
-    padding-right: 36px;
+    padding-right: 40px;
+    min-width: 200px;
 }
 
 .matter-select:focus {
     outline: none;
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(243,156,18,0.2);
+    box-shadow: 0 0 0 3px rgba(201,162,39,0.2);
 }
 
 .matter-select:hover {
     border-color: var(--accent-color);
 }
 
-/* ==================== AI 解读 ==================== */
-#ai-section {
-    border-left: 4px solid #9333EA;
-}
-
-#ai-section .card-title {
-    color: #9333EA;
-    border-left-color: #9333EA;
-}
-
-.ai-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 20px;
-    color: #666;
-    font-size: 0.95rem;
-}
-
-.ai-spinner {
-    width: 20px;
-    height: 20px;
-    border: 3px solid #e0e0e0;
-    border-top-color: #9333EA;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.ai-result {
-    font-size: 1rem;
-    line-height: 1.9;
-    color: #444;
-}
-
-.ai-content {
-    padding: 4px 0;
-}
-
-.ai-error {
-    color: var(--danger-color);
-    font-size: 0.9rem;
-    padding: 12px;
-    background: #FEF2F2;
-    border-radius: 8px;
-}
-
 /* ==================== 起卦按钮区 ==================== */
 .divination-section {
     text-align: center;
-    margin: 40px 0;
+    margin: 48px 0;
 }
 
 .divination-btn {
     display: inline-block;
-    padding: 20px 60px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white;
-    background: linear-gradient(135deg, var(--accent-color), #E67E22);
-    border: none;
-    border-radius: 50px;
+    padding: 18px 72px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #FFF8E7;
+    background: linear-gradient(135deg, var(--primary-color), #A50000);
+    border: 2px solid var(--accent-color);
+    border-radius: 4px;
     cursor: pointer;
-    box-shadow: var(--shadow);
+    box-shadow:
+        0 4px 16px rgba(139,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.1);
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.divination-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.divination-btn:hover::before {
+    left: 100%;
 }
 
 .divination-btn:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
+    box-shadow:
+        0 6px 24px rgba(139,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+    background: linear-gradient(135deg, #A50000, var(--primary-color));
 }
 
 .divination-btn:active {
@@ -193,11 +196,22 @@ main {
 /* ==================== 卡片样式 ==================== */
 .card {
     background: var(--card-bg);
-    border-radius: 12px;
-    padding: 24px;
+    border-radius: 4px;
+    padding: 24px 28px;
     margin-bottom: 20px;
     box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    position: relative;
     transition: box-shadow 0.3s ease;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), var(--primary-color), var(--accent-color));
+    border-radius: 4px 4px 0 0;
 }
 
 .card:hover {
@@ -205,171 +219,302 @@ main {
 }
 
 .card-title {
-    font-size: 1.3rem;
-    font-weight: bold;
+    font-size: 1.25rem;
+    font-weight: 700;
     margin-bottom: 16px;
     color: var(--primary-color);
-    border-left: 4px solid var(--accent-color);
-    padding-left: 12px;
+    letter-spacing: 0.1em;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* ==================== 时间信息 ==================== */
 .time-info p {
     margin: 8px 0;
     font-size: 1rem;
+    color: #555;
 }
 
 .time-info strong {
     color: var(--primary-color);
-    margin-right: 8px;
+    margin-right: 10px;
+    font-weight: 600;
 }
 
 /* ==================== 卦象结果 ==================== */
 .gua-result {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
 }
 
 .liushen-item {
-    padding: 16px;
-    background: #F8F9FA;
-    border-radius: 8px;
+    padding: 18px 20px;
+    background: #FDFBF5;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
     border-left: 4px solid var(--accent-color);
     transition: all 0.3s ease;
 }
 
 .liushen-item:hover {
-    background: #F0F1F3;
-    transform: translateX(4px);
+    background: #FAF6ED;
+    transform: translateX(6px);
+    box-shadow: var(--shadow);
 }
 
 .liushen-item.main {
-    border-left-color: var(--danger-color);
-    background: #FFF5F5;
+    border-left-color: var(--primary-color);
+    background: #FDF8F0;
+    border-left-width: 5px;
 }
 
 .liushen-item.main:hover {
-    background: #FFE8E8;
-}
-
-.liushen-name {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-bottom: 8px;
+    background: #FBF3E8;
 }
 
 .liushen-label {
-    font-size: 0.9rem;
-    color: #7F8C8D;
+    font-size: 0.85rem;
+    color: #888;
+    letter-spacing: 0.1em;
     margin-bottom: 4px;
 }
 
+.liushen-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    letter-spacing: 0.15em;
+}
+
+.liushen-item.main .liushen-name {
+    color: var(--danger-color);
+}
+
 .liushen-details {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid #E0E0E0;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color);
 }
 
 .liushen-details p {
-    margin: 6px 0;
+    margin: 5px 0;
     font-size: 0.95rem;
     color: #555;
+}
+
+.liushen-details strong {
+    color: #666;
+    font-weight: 600;
 }
 
 /* ==================== 吉凶标签 ==================== */
 .jixiong-container {
     text-align: center;
-    padding: 20px 0;
+    padding: 24px 0;
 }
 
 .jixiong-badge {
     display: inline-block;
-    padding: 12px 30px;
-    border-radius: 25px;
-    font-weight: bold;
-    font-size: 1.3rem;
-    box-shadow: var(--shadow);
+    padding: 10px 36px;
+    border-radius: 2px;
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: 0.3em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .jixiong-badge.吉,
 .jixiong-badge.大吉 {
-    background: var(--success-color);
-    color: white;
+    background: linear-gradient(135deg, var(--success-color), #3D6B1E);
+    color: #E8F5E0;
+    border: 1px solid #4A7A28;
 }
 
 .jixiong-badge.小吉 {
-    background: #52C41A;
-    color: white;
+    background: linear-gradient(135deg, #5A7A3A, #4A6A2A);
+    color: #E8F5E0;
+    border: 1px solid #6A8A3A;
 }
 
 .jixiong-badge.平 {
-    background: var(--warning-color);
-    color: white;
+    background: linear-gradient(135deg, #8B7355, #7A6345);
+    color: #FFF8E7;
+    border: 1px solid #9B8365;
 }
 
 .jixiong-badge.凶,
 .jixiong-badge.大凶 {
-    background: var(--danger-color);
-    color: white;
+    background: linear-gradient(135deg, var(--danger-color), #4A0000);
+    color: #FFE4E4;
+    border: 1px solid #6B1010;
 }
 
 /* ==================== 解读文本 ==================== */
 .analysis-text,
 .advice-text {
     font-size: 1rem;
-    line-height: 1.8;
-    color: #555;
-    padding: 12px;
-    background: #F8F9FA;
-    border-radius: 8px;
+    line-height: 1.9;
+    color: #444;
+    padding: 14px 16px;
+    background: #FDFBF5;
+    border-radius: 4px;
+    border: 1px solid #E8E0D0;
 }
 
 .advice-text {
-    background: #FFF9E6;
+    background: #FFFDF5;
     border-left: 4px solid var(--accent-color);
+    font-style: italic;
+}
+
+/* ==================== AI 解读 ==================== */
+#ai-section {
+    background: linear-gradient(135deg, #FFFEF7, #F8F4EC);
+    padding: 8px 0;
+}
+
+#ai-section::before {
+    background: linear-gradient(90deg, #6B4600, #C9A227, #6B4600);
+}
+
+#ai-section .card-title {
+    color: #8B6914;
+}
+
+.ai-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 32px 24px;
+    color: #888;
+    font-size: 0.95rem;
+}
+
+.ai-spinner {
+    width: 22px;
+    height: 22px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.ai-result {
+    font-size: 1rem;
+    line-height: 2;
+    color: #3A3A3A;
+}
+
+.ai-content {
+    padding: 8px 4px;
+    line-height: 1.8;
+}
+
+.ai-content h1,
+.ai-content h2,
+.ai-content h3 {
+    margin: 1.2em 0 0.6em;
+    color: var(--primary-color);
+}
+
+.ai-content h1:first-child,
+.ai-content h2:first-child,
+.ai-content h3:first-child {
+    margin-top: 0;
+}
+
+.ai-content p {
+    margin: 0.6em 0;
+}
+
+.ai-content ul,
+.ai-content ol {
+    margin: 0.6em 0;
+    padding-left: 1.5em;
+}
+
+.ai-content li {
+    margin: 0.3em 0;
+}
+
+.ai-content blockquote {
+    margin: 1em 0;
+    padding: 0.8em 1em;
+    background: #F5EFE0;
+    border-left: 3px solid var(--accent-color);
+    border-radius: 0 4px 4px 0;
+    font-style: italic;
+}
+
+.ai-content strong {
+    color: var(--primary-color);
+}
+
+.ai-content hr {
+    border: none;
+    border-top: 1px dashed var(--border-color);
+    margin: 1.2em 0;
+}
+
+.ai-error {
+    color: var(--danger-color);
+    font-size: 0.9rem;
+    padding: 14px;
+    background: #FEF2F2;
+    border-radius: 4px;
+    border: 1px solid #E8C0C0;
 }
 
 /* ==================== 历史记录 ==================== */
 .history-section {
-    margin-top: 40px;
+    margin-top: 48px;
 }
 
 .history-toggle-btn {
     display: block;
     width: 100%;
-    max-width: 300px;
+    max-width: 260px;
     margin: 0 auto 20px;
     padding: 12px 30px;
     font-size: 1rem;
     font-weight: 600;
     color: var(--primary-color);
-    background: white;
-    border: 2px solid var(--primary-color);
-    border-radius: 25px;
+    background: transparent;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
+    letter-spacing: 0.1em;
 }
 
 .history-toggle-btn:hover {
     background: var(--primary-color);
-    color: white;
+    color: #FFE4B5;
+    border-color: var(--primary-color);
 }
 
 .history-list {
-    background: white;
-    border-radius: 12px;
+    background: var(--card-bg);
+    border-radius: 4px;
     padding: 20px;
     box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
 }
 
 .history-item {
-    padding: 16px;
+    padding: 16px 18px;
     margin-bottom: 12px;
-    background: #F8F9FA;
-    border-radius: 8px;
-    border-left: 4px solid var(--accent-color);
+    background: #FDFBF5;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    border-left: 3px solid var(--accent-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -377,7 +522,7 @@ main {
 }
 
 .history-item:hover {
-    background: #F0F1F3;
+    background: #FAF6ED;
     transform: translateX(4px);
 }
 
@@ -386,8 +531,8 @@ main {
 }
 
 .history-item-time {
-    font-size: 0.9rem;
-    color: #7F8C8D;
+    font-size: 0.85rem;
+    color: #888;
     margin-bottom: 4px;
 }
 
@@ -398,12 +543,12 @@ main {
 }
 
 .history-item-delete {
-    padding: 6px 12px;
+    padding: 6px 14px;
     font-size: 0.85rem;
-    color: var(--danger-color);
-    background: white;
-    border: 1px solid var(--danger-color);
-    border-radius: 4px;
+    color: #888;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -411,21 +556,32 @@ main {
 .history-item-delete:hover {
     background: var(--danger-color);
     color: white;
+    border-color: var(--danger-color);
 }
 
 /* ==================== 页面底部 ==================== */
 .footer {
     background: var(--primary-color);
-    color: white;
+    color: rgba(255,228,181,0.7);
     text-align: center;
-    padding: 20px;
+    padding: 24px;
     margin-top: auto;
+    letter-spacing: 0.1em;
 }
 
 .footer p {
     margin: 0;
     font-size: 0.9rem;
-    opacity: 0.9;
+}
+
+.github-link {
+    color: rgba(255,228,181,0.85);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.github-link:hover {
+    color: #FFE4B5;
 }
 
 /* ==================== 工具类 ==================== */
@@ -437,7 +593,7 @@ main {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(16px);
     }
     to {
         opacity: 1;
@@ -446,41 +602,51 @@ main {
 }
 
 .fade-in {
-    animation: fadeIn 0.5s ease-out;
+    animation: fadeIn 0.6s ease-out;
 }
 
 @keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
 }
 
 .pulse {
-    animation: pulse 1s ease-in-out infinite;
+    animation: pulse 1.2s ease-in-out infinite;
 }
 
 /* ==================== 响应式设计 ==================== */
-/* 移动端 */
 @media (max-width: 768px) {
     .header h1 {
         font-size: 2rem;
     }
 
     .header .subtitle {
-        font-size: 1rem;
+        font-size: 0.95rem;
+        letter-spacing: 0.2em;
+    }
+
+    .header::before,
+    .header::after {
+        display: none;
+    }
+
+    .matter-section {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .matter-select {
+        width: 100%;
     }
 
     .divination-btn {
         width: 100%;
-        padding: 18px 40px;
-        font-size: 1.3rem;
+        padding: 16px 40px;
+        font-size: 1.2rem;
     }
 
     .card {
-        padding: 16px;
+        padding: 18px 16px;
     }
 
     .card-title {
@@ -488,18 +654,25 @@ main {
     }
 
     .liushen-name {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
     }
 
     .jixiong-badge {
-        font-size: 1.1rem;
-        padding: 10px 24px;
+        font-size: 1.2rem;
+        padding: 8px 28px;
     }
 }
 
-/* 平板 */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (max-width: 480px) {
     .container {
         padding: 16px;
+    }
+
+    .header {
+        padding: 36px 0 32px;
+    }
+
+    .header h1 {
+        font-size: 1.8rem;
     }
 }
