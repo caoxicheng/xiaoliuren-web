@@ -2,7 +2,7 @@
 
 基于传统小六壬占卜术的网页应用，自动起卦 + AI 深度解读，支持 DeepSeek 流式输出。
 
-[在线体验](https://xiaoliuren.dove-justdoit.workers.dev) · [卦象解释](#小六壬简介) · [快速部署](#快速部署)
+[在线体验](https://xiaoliuren-web.pages.dev) · [卦象解释](#小六壬简介) · [快速部署](#快速部署)
 
 ---
 
