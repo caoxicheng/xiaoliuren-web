@@ -83,7 +83,10 @@ async function handleDivination() {
     renderResult(result);
 
     // 保存到历史
-    saveDivinationRecord(result);
+    const historyRecord = saveDivinationRecord(result);
+    if (historyRecord) {
+        result.historyId = historyRecord.id;
+    }
 
     // 隐藏加载动画
     hideLoading();
@@ -125,30 +128,90 @@ function hideLoading() {
  */
 function renderResult(result) {
     const { solarDate, lunarDate, shichen, gua } = result;
+    const summary = buildResultSummary(result);
 
     // 渲染时间信息
     document.getElementById('solar-date').textContent = formatSolarDate(solarDate);
     document.getElementById('lunar-date').textContent = formatLunarDate(lunarDate, shichen);
 
+    // 渲染结果摘要
+    renderResultSummary(summary);
+
     // 渲染卦象结果
     renderGuaResult(gua);
 
     // 生成综合解读
-    const analysis = generateAnalysis(gua);
+    const analysis = generateAnalysis(gua, summary);
     document.getElementById('analysis').textContent = analysis;
-
-    // 计算并渲染吉凶判断
-    const jiXiong = calculateJiXiong(gua);
-    renderJiXiong(jiXiong);
-
-    // 生成建议
-    const advice = generateAdvice(gua);
-    document.getElementById('advice').textContent = advice;
 
     // 显示结果区域
     const resultSection = document.getElementById('result-section');
     resultSection.classList.remove('hidden');
     resultSection.classList.add('fade-in');
+}
+
+/**
+ * 构建结果摘要数据
+ */
+function buildResultSummary(result) {
+    const { matter, gua } = result;
+    const jiXiong = calculateJiXiong(gua);
+    const shiDetail = LIUSHEN_DETAILS[gua.shiGong];
+    const actionGuide = getActionGuide(jiXiong, shiDetail.level);
+
+    return {
+        matter,
+        jiXiong,
+        mainGua: gua.shiGong,
+        mainMeaning: shiDetail.meanings[0],
+        guaOverview: [
+            { label: '月宫', value: gua.yueGong },
+            { label: '日宫', value: gua.riGong },
+            { label: '时宫', value: gua.shiGong, main: true }
+        ],
+        summaryText: `${matter || '此事'}以${gua.shiGong}为主卦，整体呈${jiXiong}之象，当前更适合${actionGuide.summaryAction}。`,
+        shouldDo: actionGuide.shouldDo,
+        avoid: actionGuide.avoid
+    };
+}
+
+/**
+ * 渲染结果摘要
+ */
+function renderResultSummary(summary) {
+    const container = document.getElementById('result-summary');
+    const guaOverview = summary.guaOverview.map(item => `
+        <div class="summary-gua-chip${item.main ? ' main' : ''}">
+            <span class="summary-gua-label">${item.label}</span>
+            <span class="summary-gua-value">${item.value}${item.main ? '（主卦）' : ''}</span>
+        </div>
+    `).join('');
+
+    container.innerHTML = `
+        <div class="summary-meta">
+            <span class="summary-matter">${summary.matter}</span>
+            <span class="jixiong-badge ${summary.jiXiong}">${summary.jiXiong}</span>
+        </div>
+        <div class="summary-main-gua">
+            <div class="summary-main-label">时宫（主卦）</div>
+            <div class="summary-main-name">${summary.mainGua}</div>
+            <p class="summary-main-meaning">${summary.mainMeaning}</p>
+        </div>
+        <div class="summary-gua-overview">
+            ${guaOverview}
+        </div>
+        <p class="summary-headline">${summary.summaryText}</p>
+        <div class="summary-actions">
+            <div class="summary-action summary-action-positive">
+                <div class="summary-action-label">宜做</div>
+                <p>${summary.shouldDo}</p>
+            </div>
+            <div class="summary-action summary-action-caution">
+                <div class="summary-action-label">忌做</div>
+                <p>${summary.avoid}</p>
+            </div>
+        </div>
+    `;
 }
 
 /**
@@ -193,16 +256,20 @@ function createLiushenItem(label, liushenName, isMain) {
 /**
  * 生成综合解读
  */
-function generateAnalysis(gua) {
+function generateAnalysis(gua, summary) {
     const { yueGong, riGong, shiGong } = gua;
 
     const yueDetail = LIUSHEN_DETAILS[yueGong];
     const riDetail = LIUSHEN_DETAILS[riGong];
     const shiDetail = LIUSHEN_DETAILS[shiGong];
 
-    return `月宫${yueGong}，代表整体运势${yueDetail.meanings[0]}；` +
-           `日宫${riGong}，表示近期${riDetail.meanings[0]}；` +
-           `时宫${shiGong}（主卦），当下${shiDetail.meanings[0]}。`;
+    return `月宫${yueGong}主整体气象，显示${yueDetail.meanings[0]}；日宫${riGong}主近期变化，显示${riDetail.meanings[0]}；时宫${shiGong}为主卦，直接落在${shiDetail.meanings[0]}。
+
+因此这次判断以${summary.mainGua}的${shiDetail.level}性质为核心，再结合月宫和日宫的走势，形成“${summary.jiXiong}”的整体倾向。
+
+进一步看，当前更适合${summary.shouldDo}；若操之过急，则容易落入“${summary.avoid}”的反面情形。
+
+口诀提示：${shiDetail.poem.replace(/\n/g, ' ')}`;
 }
 
 /**
@@ -229,33 +296,30 @@ function calculateJiXiong(gua) {
 }
 
 /**
- * 渲染吉凶判断
+ * 生成摘要层行动建议
  */
-function renderJiXiong(jiXiong) {
-    const container = document.getElementById('jixiong');
-    container.innerHTML = `<span class="jixiong-badge ${jiXiong}">${jiXiong}</span>`;
-}
-
-/**
- * 生成建议
- */
-function generateAdvice(gua) {
-    const shiDetail = LIUSHEN_DETAILS[gua.shiGong];
-    const level = shiDetail.level;
-
-    let advice = '';
-
-    if (level === '吉') {
-        advice = '当前运势良好，可以积极行动，把握机会。但也要保持谨慎，不可过于冒进。';
-    } else if (level === '小吉') {
-        advice = '运势小有收获，宜稳步前进。注意细节，多听取他人意见，尤其是女性长辈的建议。';
-    } else if (level === '平') {
-        advice = '运势平稳，不宜急进。保持耐心，做好当前的事情，等待时机成熟再行动。';
-    } else if (level === '凶') {
-        advice = '当前运势不佳，宜静不宜动。谨言慎行，避免冲突和冒险。可以利用这段时间反思和调整。';
+function getActionGuide(jiXiong, mainLevel) {
+    if (jiXiong === '大吉' || jiXiong === '吉') {
+        return {
+            summaryAction: '顺势推进',
+            shouldDo: '顺着当前节奏推进最关键的一步，把握已经出现的机会',
+            avoid: '贪快贪多、轻视细节，或因为顺利而贸然加码'
+        };
     }
 
-    return advice + `\n\n口诀：${shiDetail.poem}`;
+    if (jiXiong === '平' || mainLevel === '平') {
+        return {
+            summaryAction: '稳住节奏',
+            shouldDo: '先把手头事项理顺，按部就班推进，给结果一些发酵时间',
+            avoid: '仓促做决定、频繁变更方向，或在信息不足时强行求结果'
+        };
+    }
+
+    return {
+        summaryAction: '以守为主',
+        shouldDo: '先观察局势、收缩动作，把风险控制和情绪稳定放在前面',
+        avoid: '争强好胜、带情绪行动，或在压力下继续冒进'
+    };
 }
 
 /**
@@ -309,15 +373,28 @@ function createHistoryItem(record) {
     const item = document.createElement('div');
     item.className = 'history-item';
 
-    const date = new Date(record.timestamp);
-    const timeStr = formatSolarDate(date);
+    const viewModel = buildHistoryViewModel(record);
 
     item.innerHTML = `
-        <div class="history-item-info">
-            <div class="history-item-time">${timeStr}</div>
-            <div class="history-item-result">时宫：${record.gua.shiGong}</div>
+        <div class="history-item-toolbar">
+            <button class="history-item-delete" data-id="${record.id}">删除</button>
         </div>
-        <button class="history-item-delete" data-id="${record.id}">删除</button>
+        <details class="history-record">
+            <summary class="history-item-summary">
+                <div class="history-item-info">
+                    <div class="history-item-time">${viewModel.timeText}</div>
+                    <div class="history-item-meta">
+                        <span class="history-item-matter">${viewModel.matter}</span>
+                        <span class="history-item-result">时宫：${viewModel.mainGua}</span>
+                        <span class="jixiong-badge ${viewModel.jiXiong}">${viewModel.jiXiong}</span>
+                    </div>
+                </div>
+                <span class="history-item-expand">展开详情</span>
+            </summary>
+            <div class="history-item-detail">
+                ${renderHistoryDetail(viewModel)}
+            </div>
+        </details>
     `;
 
     // 绑定删除按钮事件
@@ -327,6 +404,151 @@ function createHistoryItem(record) {
     });
 
     return item;
+}
+
+function buildHistoryViewModel(record) {
+    const safeMatter = record.matter || '未记录事项';
+    const hasGua = Boolean(record.gua);
+    const summary = hasGua ? buildResultSummary(record) : null;
+    const analysis = hasGua ? generateAnalysis(record.gua, summary) : '该条历史记录缺少完整卦象，无法展示综合解读。';
+    const timeSource = record.solarDate || record.timestamp;
+    const timeText = timeSource ? formatSolarDate(new Date(timeSource)) : '未记录时间';
+    const lunarText = record.lunarDate
+        ? formatHistoryLunarDate(record.lunarDate, record.shichen)
+        : '未记录农历信息';
+    const aiAnalysis = record.aiAnalysis || {
+        status: 'unavailable',
+        content: '',
+        errorMessage: ''
+    };
+
+    return {
+        matter: safeMatter,
+        timeText,
+        lunarText,
+        shichen: record.shichen || '未记录',
+        gua: record.gua,
+        mainGua: hasGua ? record.gua.shiGong : '未记录',
+        jiXiong: summary ? summary.jiXiong : '平',
+        summary,
+        analysis,
+        aiAnalysis
+    };
+}
+
+function formatHistoryLunarDate(lunarDate, shichen) {
+    const leap = lunarDate.isLeap ? '闰' : '';
+    const shichenText = shichen ? ` ${shichen}时` : '';
+    return `${lunarDate.year}年${leap}${lunarDate.month}月${lunarDate.day}日${shichenText}`;
+}
+
+function renderHistoryDetail(viewModel) {
+    const baseInfo = `
+        <div class="history-detail-section">
+            <div class="history-detail-title">基本信息</div>
+            <div class="history-detail-grid">
+                <div class="history-detail-field">
+                    <span class="history-detail-label">事项</span>
+                    <span class="history-detail-value">${viewModel.matter}</span>
+                </div>
+                <div class="history-detail-field">
+                    <span class="history-detail-label">公历</span>
+                    <span class="history-detail-value">${viewModel.timeText}</span>
+                </div>
+                <div class="history-detail-field">
+                    <span class="history-detail-label">农历</span>
+                    <span class="history-detail-value">${viewModel.lunarText}</span>
+                </div>
+                <div class="history-detail-field">
+                    <span class="history-detail-label">时辰</span>
+                    <span class="history-detail-value">${viewModel.shichen === '未记录' ? '未记录' : `${viewModel.shichen}时`}</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    if (!viewModel.gua || !viewModel.summary) {
+        return `${baseInfo}
+            <div class="history-detail-section">
+                <div class="history-detail-title">结果说明</div>
+                <div class="history-detail-box">这条历史记录来自旧版本，缺少完整卦象字段，目前只能保留基础时间与事项信息。</div>
+            </div>
+            ${renderHistoryAiSection(viewModel.aiAnalysis)}
+        `;
+    }
+
+    const guaInfo = [
+        { label: '月宫', value: viewModel.gua.yueGong },
+        { label: '日宫', value: viewModel.gua.riGong },
+        { label: '时宫', value: `${viewModel.gua.shiGong}（主卦）` }
+    ].map(item => `
+        <div class="history-detail-field">
+            <span class="history-detail-label">${item.label}</span>
+            <span class="history-detail-value">${item.value}</span>
+        </div>
+    `).join('');
+
+    return `
+        ${baseInfo}
+        <div class="history-detail-section">
+            <div class="history-detail-title">卦象信息</div>
+            <div class="history-detail-grid">${guaInfo}</div>
+        </div>
+        <div class="history-detail-section">
+            <div class="history-detail-title">结果摘要</div>
+            <div class="history-detail-box">
+                <div class="history-detail-summary-head">
+                    <span class="jixiong-badge ${viewModel.summary.jiXiong}">${viewModel.summary.jiXiong}</span>
+                    <span class="history-detail-main-gua">主卦：${viewModel.summary.mainGua}</span>
+                </div>
+                <p>${viewModel.summary.summaryText}</p>
+            </div>
+        </div>
+        <div class="history-detail-section">
+            <div class="history-detail-title">行动建议</div>
+            <div class="history-detail-grid history-detail-grid-single">
+                <div class="history-detail-box">
+                    <span class="history-detail-label">宜做</span>
+                    <p>${viewModel.summary.shouldDo}</p>
+                </div>
+                <div class="history-detail-box">
+                    <span class="history-detail-label">忌做</span>
+                    <p>${viewModel.summary.avoid}</p>
+                </div>
+            </div>
+        </div>
+        <div class="history-detail-section">
+            <div class="history-detail-title">综合解读</div>
+            <div class="history-detail-box history-detail-analysis">${viewModel.analysis}</div>
+        </div>
+        ${renderHistoryAiSection(viewModel.aiAnalysis)}
+    `;
+}
+
+function renderHistoryAiSection(aiAnalysis) {
+    const statusText = {
+        pending: 'AI 分析尚未完成保存',
+        success: '已保存当次 AI 分析记录',
+        error: aiAnalysis.errorMessage || 'AI 分析保存失败',
+        unavailable: aiAnalysis.errorMessage || '该条历史记录未保存 AI 分析'
+    };
+
+    let content = `<div class="history-detail-box">${statusText[aiAnalysis.status] || statusText.unavailable}</div>`;
+
+    if (aiAnalysis.status === 'success' && aiAnalysis.content) {
+        content = `
+            <div class="history-detail-box history-detail-ai">
+                <div class="ai-content">${marked.parse(aiAnalysis.content)}</div>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="history-detail-section">
+            <div class="history-detail-title">AI 分析记录</div>
+            ${content}
+        </div>
+    `;
 }
 
 /**
@@ -415,10 +637,17 @@ async function fetchAIAnalysis(result) {
                 // 用 textContent 追加原始文本，再用 marked 渲染
                 streamEl.textContent = buffer;
                 // 避免频繁重渲染，缓冲一些内容再更新
-                if (buffer.length > 50 || done) {
+                if (buffer.length > 50) {
                     aiResult.innerHTML = '<div class="ai-content">' + marked.parse(buffer) + '</div>';
                 }
             }
+
+            aiResult.innerHTML = '<div class="ai-content">' + marked.parse(buffer) + '</div>';
+            syncHistoryAIResult(result.historyId, {
+                status: 'success',
+                content: buffer,
+                errorMessage: ''
+            });
         } else {
             // 非流式 JSON 响应（兼容旧版）
             const data = await response.json();
@@ -428,12 +657,43 @@ async function fetchAIAnalysis(result) {
             aiLoading.style.display = 'none';
             aiResult.style.display = 'block';
             aiResult.innerHTML = `<div class="ai-content">${marked.parse(data.reply)}</div>`;
+            syncHistoryAIResult(result.historyId, {
+                status: 'success',
+                content: data.reply,
+                errorMessage: ''
+            });
         }
 
     } catch (err) {
         aiLoading.style.display = 'none';
         aiError.style.display = 'block';
         aiError.textContent = `AI 解读暂时不可用（${err.message}），可稍后重试或使用基础解读。`;
+        syncHistoryAIResult(result.historyId, {
+            status: err.message.includes('503') ? 'unavailable' : 'error',
+            content: '',
+            errorMessage: err.message
+        });
     }
 }
 
+function syncHistoryAIResult(historyId, aiAnalysis) {
+    if (!historyId) {
+        return;
+    }
+
+    const updated = updateHistoryRecordAI(historyId, {
+        ...aiAnalysis,
+        updatedAt: new Date().toISOString()
+    });
+
+    if (updated) {
+        refreshHistoryIfVisible();
+    }
+}
+
+function refreshHistoryIfVisible() {
+    const historyList = document.getElementById('history-list');
+    if (!historyList.classList.contains('hidden')) {
+        loadHistory();
+    }
+}

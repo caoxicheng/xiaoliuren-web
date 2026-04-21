@@ -46,20 +46,39 @@
 
         <!-- 卦象结果展示区 -->
         <section id="result-section" class="result-section hidden">
+            <!-- 结果摘要 -->
+            <div class="card summary-card">
+                <h2 class="card-title">结果摘要</h2>
+                <div id="result-summary" class="result-summary">
+                    <!-- 动态生成摘要内容 -->
+                </div>
+            </div>
+
+            <!-- 卦象依据 -->
+            <div class="card">
+                <details class="gua-details-card">
+                    <summary class="gua-details-toggle">
+                        <span>卦象依据</span>
+                        <span class="gua-details-hint">展开查看详细解释</span>
+                    </summary>
+                    <div id="gua-result" class="gua-result">
+                        <!-- 动态生成卦象内容 -->
+                    </div>
+                </details>
+            </div>
+
+            <!-- 综合解读 -->
+            <div class="card">
+                <h2 class="card-title">综合解读</h2>
+                <div id="analysis" class="analysis-text"></div>
+            </div>
+
             <!-- 起卦时间 -->
             <div class="card">
                 <h2 class="card-title">起卦时间</h2>
                 <div class="time-info">
                     <p><strong>公历：</strong><span id="solar-date"></span></p>
                     <p><strong>农历：</strong><span id="lunar-date"></span></p>
-                </div>
-            </div>
-
-            <!-- 卦象结果 -->
-            <div class="card">
-                <h2 class="card-title">卦象结果</h2>
-                <div id="gua-result" class="gua-result">
-                    <!-- 动态生成卦象内容 -->
                 </div>
             </div>
 
@@ -72,24 +91,6 @@
                 </div>
                 <div id="ai-result" class="ai-result"></div>
                 <div id="ai-error" class="ai-error" style="display:none;"></div>
-            </div>
-
-            <!-- 综合解读 -->
-            <div class="card">
-                <h2 class="card-title">综合解读</h2>
-                <div id="analysis" class="analysis-text"></div>
-            </div>
-
-            <!-- 吉凶判断 -->
-            <div class="card">
-                <h2 class="card-title">吉凶判断</h2>
-                <div id="jixiong" class="jixiong-container"></div>
-            </div>
-
-            <!-- 建议 -->
-            <div class="card">
-                <h2 class="card-title">建议</h2>
-                <div id="advice" class="advice-text"></div>
             </div>
         </section>
 
