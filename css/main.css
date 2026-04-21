@@ -939,6 +939,10 @@ main {
 
 /* ==================== 响应式设计 ==================== */
 @media (max-width: 768px) {
+    main {
+        padding-bottom: 44px;
+    }
+
     .header h1 {
         font-size: 2rem;
     }
@@ -970,22 +974,109 @@ main {
 
     .card {
         padding: 18px 16px;
+        margin-bottom: 16px;
     }
 
     .card-title {
         font-size: 1.1rem;
+        margin-bottom: 14px;
+        padding-bottom: 8px;
+    }
+
+    .result-summary {
+        gap: 14px;
+    }
+
+    .summary-meta {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .summary-matter {
+        font-size: 0.88rem;
     }
 
     .summary-main-name {
         font-size: 1.7rem;
+        letter-spacing: 0.14em;
     }
 
     .summary-actions {
         grid-template-columns: 1fr;
+        gap: 10px;
     }
 
     .summary-gua-overview {
         gap: 8px;
+    }
+
+    .summary-headline {
+        font-size: 0.98rem;
+        line-height: 1.8;
+    }
+
+    .summary-action,
+    .summary-main-gua {
+        border-radius: 5px;
+    }
+
+    .gua-details-toggle {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+        line-height: 1.5;
+    }
+
+    .gua-details-hint {
+        font-size: 0.8rem;
+    }
+
+    .analysis-text,
+    .ai-result,
+    .history-detail-box,
+    .history-detail-field {
+        padding: 12px 14px;
+    }
+
+    .analysis-text {
+        font-size: 0.96rem;
+        line-height: 1.85;
+    }
+
+    .ai-loading {
+        padding: 22px 14px;
+    }
+
+    .ai-result {
+        font-size: 0.96rem;
+        line-height: 1.85;
+    }
+
+    .ai-content {
+        line-height: 1.72;
+    }
+
+    .ai-content h1,
+    .ai-content h2,
+    .ai-content h3 {
+        margin: 0.95em 0 0.45em;
+        line-height: 1.45;
+    }
+
+    .ai-content p {
+        margin: 0.5em 0;
+    }
+
+    .ai-content ul,
+    .ai-content ol {
+        margin: 0.5em 0;
+        padding-left: 1.2em;
+    }
+
+    .ai-content blockquote {
+        margin: 0.85em 0;
+        padding: 0.7em 0.85em;
     }
 
     .liushen-name {
@@ -1000,43 +1091,137 @@ main {
     .history-detail-grid {
         grid-template-columns: 1fr;
     }
+
+    .history-list {
+        padding: 16px 14px;
+    }
+
+    .history-item-toolbar {
+        padding: 12px 14px 0;
+    }
+
+    .history-record {
+        padding: 0 14px 14px;
+    }
+
+    .history-item-summary {
+        gap: 12px;
+    }
+
+    .history-item-meta {
+        gap: 8px;
+    }
+
+    .history-detail-title {
+        margin-bottom: 8px;
+    }
+
+    .history-detail-section + .history-detail-section {
+        margin-top: 14px;
+    }
 }
 
 @media (max-width: 480px) {
     .container {
-        padding: 16px;
+        padding: 14px;
     }
 
     .header {
-        padding: 36px 0 32px;
+        padding: 32px 0 28px;
     }
 
     .header h1 {
-        font-size: 1.8rem;
+        font-size: 1.68rem;
+        letter-spacing: 0.12em;
+    }
+
+    .header .subtitle {
+        letter-spacing: 0.14em;
     }
 
     .summary-card {
-        padding: 18px 16px;
+        padding: 16px 14px;
     }
 
     .summary-main-gua,
     .summary-action {
-        padding: 14px 16px;
+        padding: 12px 14px;
     }
 
     .summary-gua-chip {
         width: 100%;
         justify-content: space-between;
+        padding: 7px 10px;
+    }
+
+    .summary-main-name {
+        font-size: 1.52rem;
+    }
+
+    .summary-main-meaning {
+        font-size: 0.94rem;
+    }
+
+    .summary-headline {
+        font-size: 0.94rem;
+    }
+
+    .summary-action-label,
+    .summary-gua-label {
+        font-size: 0.76rem;
     }
 
     #ai-section .card-title {
         align-items: flex-start;
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
+    }
+
+    #ai-section .card-title::after {
+        padding: 2px 8px;
+        font-size: 0.62rem;
+        opacity: 0.78;
+    }
+
+    .analysis-text,
+    .ai-result {
+        font-size: 0.92rem;
+        line-height: 1.76;
+    }
+
+    .ai-content h1,
+    .ai-content h2,
+    .ai-content h3 {
+        font-size: 1rem;
+    }
+
+    .ai-content ul,
+    .ai-content ol {
+        padding-left: 1.05em;
+    }
+
+    .ai-content blockquote {
+        padding: 0.65em 0.75em;
     }
 
     .history-item-summary {
         align-items: flex-start;
         flex-direction: column;
+        gap: 10px;
+    }
+
+    .history-item-expand {
+        font-size: 0.8rem;
+    }
+
+    .history-item-matter,
+    .history-item .jixiong-badge,
+    .history-detail-summary-head .jixiong-badge {
+        font-size: 0.74rem;
+    }
+
+    .history-detail-field,
+    .history-detail-box {
+        padding: 11px 12px;
     }
 }

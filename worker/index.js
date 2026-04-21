@@ -1,6 +1,6 @@
 /**
  * 小六壬 AI 解读 Worker（流式版）
- * POST /api/divination - 起卦+AI解读（同时增加计数）
+ * POST /api/divination - AI 解读
  * GET  /api/count      - 获取访问人次
  */
 
@@ -44,11 +44,11 @@ export default {
       }
     }
 
-    // POST /api/divination - 起卦+计数
+    // POST 接口
     if (method === 'POST') {
       const url = new URL(request.url);
 
-      // 计数接口
+      // 访问计数接口
       if (url.pathname === '/api/count') {
         const count = await env.COUNTER_KV.get('visit_count');
         const newCount = (parseInt(count || '0') + 1).toString();
@@ -83,12 +83,6 @@ async function handleDivination(request, env) {
         headers: CORS_HEADERS
       });
     }
-
-    // 增加访问计数（异步，不阻塞主流程）
-    env.COUNTER_KV.get('visit_count').then(async (count) => {
-      const newCount = (parseInt(count || '0') + 1).toString();
-      await env.COUNTER_KV.put('visit_count', newCount);
-    }).catch(() => {});
 
     // 六神口诀
     const poems = {
