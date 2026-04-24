@@ -3,45 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="小六壬算卦工具 - 传统占卜，掐指一算">
-    <meta name="keywords" content="小六壬,算卦,占卜,六壬">
-    <title>小六壬算卦 - 掐指一算</title>
+    <meta name="description" content="小六壬算卦在线起卦工具，依据农历月、日、时推算月宫、日宫、时宫，提供求财、出行、婚姻感情、健康、事业学业等事项的吉凶摘要、宜忌建议与传统解读。">
+    <meta name="keywords" content="小六壬,小六壬算卦,小六壬起卦,在线起卦,占卜工具,六壬,吉凶查询,传统占卜">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="caoxicheng">
+    <meta name="application-name" content="小六壬算卦">
+    <meta name="theme-color" content="#A92F24">
+    <link rel="canonical" href="https://xiaoliuren-web.pages.dev/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:site_name" content="小六壬算卦">
+    <meta property="og:title" content="小六壬算卦 - 在线起卦与吉凶解读">
+    <meta property="og:description" content="在线小六壬起卦工具，按农历月日时推算月宫、日宫、时宫，快速查看吉凶摘要、宜做忌做和传统卦象依据。">
+    <meta property="og:url" content="https://xiaoliuren-web.pages.dev/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="小六壬算卦 - 在线起卦与吉凶解读">
+    <meta name="twitter:description" content="按农历月日时自动起卦，提供小六壬吉凶摘要、宜忌建议、卦象依据与 AI 深度解读。">
+    <title>小六壬算卦 - 在线起卦与吉凶解读工具</title>
     <link rel="stylesheet" href="css/main.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebApplication",
+                "@id": "https://xiaoliuren-web.pages.dev/#webapp",
+                "name": "小六壬算卦",
+                "url": "https://xiaoliuren-web.pages.dev/",
+                "applicationCategory": "LifestyleApplication",
+                "operatingSystem": "Any",
+                "inLanguage": "zh-CN",
+                "description": "小六壬算卦在线起卦工具，依据农历月、日、时推算月宫、日宫、时宫，提供吉凶摘要、宜忌建议与传统卦象解读。",
+                "offers": {
+                    "@type": "Offer",
+                    "price": "0",
+                    "priceCurrency": "CNY"
+                },
+                "creator": {
+                    "@type": "Person",
+                    "name": "caoxicheng",
+                    "url": "https://github.com/caoxicheng"
+                }
+            },
+            {
+                "@type": "FAQPage",
+                "@id": "https://xiaoliuren-web.pages.dev/#faq",
+                "inLanguage": "zh-CN",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "小六壬是什么？",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "小六壬是中国传统占卜术之一，以大安、留连、速喜、赤口、小吉、空亡六神为基础，通过农历月、日、时推算月宫、日宫和时宫来判断事情的吉凶趋势。"
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "这个小六壬工具如何起卦？",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "用户选择要求问的事项后，工具会按当前时间换算农历月、日、时，并依照小六壬规则推算月宫、日宫、时宫，生成结果摘要、宜忌建议和卦象依据。"
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "小六壬结果可以作为决策依据吗？",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "本工具仅供娱乐和传统文化学习参考，不构成投资、医疗、法律、婚姻或其他现实决策建议。重要事项请结合事实信息并咨询专业人士。"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+    </script>
 </head>
 <body>
     <!-- 页面头部 -->
     <header class="header">
         <div class="container">
-            <h1>小六壬算卦</h1>
-            <p class="subtitle">掐指一算，知晓吉凶</p>
+            <div class="brand-mark">六</div>
+            <div class="header-copy">
+                <p class="eyebrow">小六壬起课</p>
+                <h1>小六壬算卦</h1>
+                <p class="subtitle">一事一问，观时取象</p>
+            </div>
+            <div class="liushen-rail" aria-hidden="true">
+                <span>大安</span>
+                <span>留连</span>
+                <span>速喜</span>
+                <span>赤口</span>
+                <span>小吉</span>
+                <span>空亡</span>
+            </div>
             <p class="visit-count" id="visit-count">已服务 <span id="count-number">--</span> 人次</p>
         </div>
     </header>
 
     <!-- 主内容区 -->
     <main class="container">
-        <!-- 事项选择区 -->
-        <section class="matter-section">
-            <label for="matter-select" class="matter-label">我想问：</label>
-            <select id="matter-select" class="matter-select">
-                <option value="">-- 请选择事项类型 --</option>
-                <option value="求财">求财</option>
-                <option value="出行">出行</option>
-                <option value="婚姻感情">婚姻感情</option>
-                <option value="疾病健康">疾病健康</option>
-                <option value="失物寻找">失物寻找</option>
-                <option value="诉讼官司">诉讼官司</option>
-                <option value="考试学业">考试学业</option>
-                <option value="事业工作">事业工作</option>
-                <option value="综合">综合（所有事项）</option>
-            </select>
-        </section>
+        <!-- 起卦输入区 -->
+        <section class="oracle-panel">
+            <div class="oracle-panel-copy">
+                <span class="section-kicker">起卦</span>
+                <h2>选择事项，取当前时辰成卦</h2>
+                <div class="oracle-rules" aria-hidden="true">
+                    <span>月宫</span>
+                    <span>日宫</span>
+                    <span>时宫</span>
+                </div>
+            </div>
+            <div class="oracle-controls">
+                <div class="matter-section">
+                    <label for="matter-select" class="matter-label">事项</label>
+                    <select id="matter-select" class="matter-select">
+                        <option value="">请选择事项类型</option>
+                        <option value="求财">求财</option>
+                        <option value="出行">出行</option>
+                        <option value="婚姻感情">婚姻感情</option>
+                        <option value="疾病健康">疾病健康</option>
+                        <option value="失物寻找">失物寻找</option>
+                        <option value="诉讼官司">诉讼官司</option>
+                        <option value="考试学业">考试学业</option>
+                        <option value="事业工作">事业工作</option>
+                        <option value="综合">综合（所有事项）</option>
+                    </select>
+                </div>
 
-        <!-- 起卦按钮区 -->
-        <section class="divination-section">
-            <button id="divination-btn" class="divination-btn">
-                立即起卦
-            </button>
+                <div class="divination-section">
+                    <button id="divination-btn" class="divination-btn">
+                        立即起卦
+                    </button>
+                </div>
+            </div>
         </section>
 
         <!-- 卦象结果展示区 -->
@@ -94,6 +190,32 @@
             </div>
         </section>
 
+        <!-- SEO 内容说明区 -->
+        <section class="seo-section" aria-labelledby="seo-title">
+            <div class="seo-heading">
+                <span class="section-kicker">说明</span>
+                <h2 id="seo-title">小六壬在线起卦工具</h2>
+            </div>
+            <div class="seo-grid">
+                <article class="seo-item">
+                    <h3>小六壬是什么</h3>
+                    <p>小六壬以大安、留连、速喜、赤口、小吉、空亡六神为基础，结合农历月、日、时推算月宫、日宫与时宫，用于观察一件事情的吉凶趋势。</p>
+                </article>
+                <article class="seo-item">
+                    <h3>支持哪些事项</h3>
+                    <p>当前支持求财、出行、婚姻感情、疾病健康、失物寻找、诉讼官司、考试学业、事业工作和综合事项，适合一事一问。</p>
+                </article>
+                <article class="seo-item">
+                    <h3>如何使用</h3>
+                    <p>选择事项后点击立即起卦，系统会按当前时间自动排出三宫，并展示结果摘要、宜做忌做、卦象依据、综合解读和可选 AI 深度解读。</p>
+                </article>
+                <article class="seo-item">
+                    <h3>参考说明</h3>
+                    <p>本工具面向传统文化学习与娱乐参考，不构成投资、医疗、法律、婚姻或其他现实决策建议。重要事项请结合事实判断并咨询专业人士。</p>
+                </article>
+            </div>
+        </section>
+
         <!-- 历史记录区 -->
         <section class="history-section">
             <button id="history-toggle-btn" class="history-toggle-btn">
@@ -107,7 +229,7 @@
 
     <!-- 页面底部 -->
     <footer class="footer">
-        <p>&copy; 2026 小六壬算卦工具 v1.0.2 | 仅供娱乐参考 | <a href="https://github.com/caoxicheng" target="_blank" class="github-link">@caoxicheng</a></p>
+        <p>&copy; 2026 小六壬算卦工具 v1.1.0 | 仅供娱乐参考 | <a href="https://github.com/caoxicheng" target="_blank" class="github-link">@caoxicheng</a></p>
     </footer>
 
     <!-- 引入农历转换库 -->

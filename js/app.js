@@ -192,15 +192,20 @@ function renderResultSummary(summary) {
             <span class="summary-matter">${summary.matter}</span>
             <span class="jixiong-badge ${summary.jiXiong}">${summary.jiXiong}</span>
         </div>
-        <div class="summary-main-gua">
-            <div class="summary-main-label">时宫（主卦）</div>
-            <div class="summary-main-name">${summary.mainGua}</div>
-            <p class="summary-main-meaning">${summary.mainMeaning}</p>
+        <div class="summary-verdict">
+            <div class="summary-main-gua">
+                <div class="summary-main-label">时宫（主卦）</div>
+                <div class="summary-main-name">${summary.mainGua}</div>
+            </div>
+            <div class="summary-verdict-copy">
+                <div class="summary-verdict-label">判词</div>
+                <p class="summary-main-meaning">${summary.mainMeaning}</p>
+                <p class="summary-headline">${summary.summaryText}</p>
+            </div>
         </div>
         <div class="summary-gua-overview">
             ${guaOverview}
         </div>
-        <p class="summary-headline">${summary.summaryText}</p>
         <div class="summary-actions">
             <div class="summary-action summary-action-positive">
                 <div class="summary-action-label">宜做</div>
