@@ -28,6 +28,7 @@
 - [ ] 接入 `MATTER_READINGS`，让不同事项有定制化解读
 - [x] 历史记录支持“点击回看详情”
 - [ ] 优化 AI 降级逻辑，AI 不可用时仍能完整展示规则解读
+- [x] 将 AI 请求改为 Pages 同源 API，减少大陆网络直连 `workers.dev` 的可用性风险
 - [x] 修复访问计数重复累加问题
 
 ### P1 体验优化
@@ -69,6 +70,12 @@
 - [x] 优化结果摘要、卦象依据、AI 解读与历史记录的视觉层级
 - [x] 完成 SEO 基础优化，新增 canonical、Open Graph、Twitter Card、JSON-LD、robots.txt、sitemap.xml 和少量静态说明内容
 - [x] 更新当前版本为 `v1.1.0`，新增 `CHANGELOG.md`
+
+### 2026-04-25
+
+- [x] 新增 Pages Functions `/api/*` 同源代理入口，服务端转发到现有 Worker AI 解读与访问计数逻辑
+- [x] 前端 AI 与计数请求改为线上同源 API，保留 `file://` 本地 Worker fallback
+- [x] 更新部署文档，说明 Pages 同源 API 代理与 Worker secret 关系
 
 ## 使用说明
 

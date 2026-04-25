@@ -12,7 +12,7 @@
 |------|------|
 | 自动起卦 | 基于农历月、日、时，三宫推算 |
 | 事项选择 | 求财、出行、婚姻、疾病等 8 类 |
-| AI 解读 | DeepSeek 模型，流式返回，支持 markdown |
+| AI 解读 | DeepSeek 模型，Pages 同源 API 流式返回，支持 markdown |
 | 传统解读 | 六神五行、吉凶判断、歌诀释义 |
 | 历史记录 | localStorage 持久化，最多 50 条 |
 | 访问计数 | 独立计数 API |
@@ -23,7 +23,7 @@
 
 - **前端**：HTML5 + CSS3 + Vanilla JS（零框架依赖）
 - **农历**：lunar-javascript（CDN）
-- **AI 后端**：Cloudflare Worker + DeepSeek API
+- **AI 后端**：Cloudflare Pages Functions 同源代理 + Cloudflare Worker + DeepSeek API
 - **部署**：Cloudflare Pages + Workers
 
 ---
@@ -39,6 +39,8 @@ xiaoliuren-web/
 │   ├── data.js            # 六神数据、事项解读
 │   ├── storage.js         # 历史记录
 │   └── xiaoliuren-core.js # 核心算法
+├── functions/
+│   └── api/[[path]].js    # Pages 同源 API 代理入口
 └── worker/
     ├── index.js           # Cloudflare Worker（AI 代理）
     └── wrangler.toml      # 配置
@@ -52,7 +54,11 @@ xiaoliuren-web/
 
 - [DEPLOY.md](./DEPLOY.md)
 
-### 1. 部署 AI Worker
+### 1. 配置 Pages AI 环境
+
+当前正式站通过 `/api/*` 同源访问 AI 服务，Pages Functions 会在服务端代理到现有 Worker，避免浏览器直接请求 `workers.dev`。
+
+### 2. 部署 AI Worker（兼容/备用）
 
 ```bash
 cd worker
@@ -65,7 +71,7 @@ wrangler secret put DEEPSEEK_API_KEY
 wrangler deploy
 ```
 
-### 2. 部署前端
+### 3. 部署前端
 
 ```bash
 wrangler pages deploy . --project-name=xiaoliuren-web
@@ -73,9 +79,7 @@ wrangler pages deploy . --project-name=xiaoliuren-web
 
 或在 Cloudflare Dashboard：连接 GitHub → Build command 留空 → Build output 填 `/`
 
-### 3. 更新前端 AI 地址
-
-Worker 部署后，将地址写入 `js/app.js` 中的 `AI_WORKER_URL` 常量。
+部署后，线上 AI 请求应走 `https://xiaoliuren-web.pages.dev/api/*`。旧 Worker 地址保留为 Pages 服务端代理目标、本地 `file://` fallback 和排障入口。
 
 ---
 

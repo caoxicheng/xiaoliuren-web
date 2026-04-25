@@ -570,8 +570,10 @@ function handleDeleteRecord(id) {
  * 调用 AI 深度解读
  * @param {Object} result - 占卜结果
  */
-const AI_WORKER_URL = 'https://xiaoliuren-ai.dove-justdoit.workers.dev/api/divination';
-const COUNT_URL = 'https://xiaoliuren-ai.dove-justdoit.workers.dev/api/count';
+const LEGACY_WORKER_ORIGIN = 'https://xiaoliuren-ai.dove-justdoit.workers.dev';
+const API_ORIGIN = window.location.protocol === 'file:' ? LEGACY_WORKER_ORIGIN : window.location.origin;
+const AI_WORKER_URL = `${API_ORIGIN}/api/divination`;
+const COUNT_URL = `${API_ORIGIN}/api/count`;
 
 /**
  * 获取并显示访问人次

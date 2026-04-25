@@ -1,5 +1,24 @@
 # Changelog
 
+## v1.1.1 - 2026-04-25
+
+### Added
+
+- 新增 Pages Functions 同源 API 入口 `/api/*`，由服务端代理到现有 Worker 的 AI 解读与访问计数逻辑。
+- 新增 Pages 项目 `wrangler.toml`，配置 Pages Functions 部署入口。
+- 为首屏增加克制的纸卷入场动效，并支持 `prefers-reduced-motion`。
+
+### Changed
+
+- 前端 AI 解读与访问计数请求改为同源 `/api/divination`、`/api/count`，降低中国大陆网络直连 `workers.dev` 的可用性风险。
+- 本地 `file://` 打开时保留旧 Worker 地址作为开发 fallback。
+- 更新部署文档，说明 Pages 同源 API 代理到现有 Worker。
+- 将页脚版本号更新为 `v1.1.1`。
+
+### Notes
+
+- 独立 Worker 保留为服务端代理目标与排障入口，本版本不移除旧服务。
+
 ## v1.1.0 - 2026-04-24
 
 ### Added

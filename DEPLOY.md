@@ -13,6 +13,7 @@
 
 - 前端正式地址：[https://xiaoliuren-web.pages.dev](https://xiaoliuren-web.pages.dev)
 - Worker 地址：[https://xiaoliuren-ai.dove-justdoit.workers.dev](https://xiaoliuren-ai.dove-justdoit.workers.dev)
+- AI 同源 API：[https://xiaoliuren-web.pages.dev/api/divination](https://xiaoliuren-web.pages.dev/api/divination)
 
 ## 发布顺序
 
@@ -82,6 +83,12 @@ git tag --list
 
 ## 前端部署
 
+### 前端环境要求
+
+Pages Functions 会将 `/api/*` 同源请求代理到现有 Worker，避免浏览器直接请求 `workers.dev`。
+
+AI 密钥仍配置在 Worker 项目中，Pages 项目不需要单独配置 `DEEPSEEK_API_KEY`。
+
 在项目根目录执行：
 
 ```bash
@@ -98,6 +105,7 @@ https://xxxxxxxx.xiaoliuren-web.pages.dev
 
 - 该命令可直接复用本机现有 Wrangler 登录态
 - 不需要单独设置 `CLOUDFLARE_API_TOKEN`，前提是 Wrangler 当前 OAuth 登录态有效
+- 根目录 `wrangler.toml` 已配置 Pages Functions
 
 ## Worker 部署
 
@@ -192,6 +200,8 @@ CLOUDFLARE_API_TOKEN=...
 - AI 解读请求成功
 - 访问计数接口可正常读取
 - 起卦后计数只增加一次，不重复累加
+- 正式站浏览器 Network 中 AI 请求应指向 `https://xiaoliuren-web.pages.dev/api/divination`
+- `https://xiaoliuren-web.pages.dev/api/count` 应返回 `{ "count": number }`
 
 ## 推送到远端
 

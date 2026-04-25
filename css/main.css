@@ -1584,6 +1584,7 @@ main.container::after {
 
 .matter-select:focus {
     outline: none;
+    border-bottom-color: rgba(169,47,36,0.72);
     box-shadow: 0 3px 0 rgba(169,47,36,0.16);
 }
 
@@ -1601,6 +1602,10 @@ main.container::after {
     font-size: 1rem;
     letter-spacing: 0.12em;
     transform: rotate(-1deg);
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
 }
 
 .divination-btn::before {
@@ -1617,7 +1622,183 @@ main.container::after {
 
 .divination-btn:hover {
     background: #8D2A21;
-    box-shadow: none;
+    box-shadow: 0 6px 14px rgba(169,47,36,0.16);
+    transform: rotate(-1deg) translateY(1px) scale(0.985);
+}
+
+/* ==================== 首屏纸卷入场动效 ==================== */
+.brand-mark {
+    animation: sealDropIn 0.72s cubic-bezier(0.2, 0.9, 0.25, 1.12) both;
+}
+
+.header-copy .eyebrow,
+.header h1,
+.header .subtitle,
+.visit-count {
+    animation: inkRiseIn 0.72s ease both;
+}
+
+.header-copy .eyebrow {
+    animation-delay: 0.12s;
+}
+
+.header h1 {
+    animation-delay: 0.2s;
+}
+
+.header .subtitle {
+    animation-delay: 0.28s;
+}
+
+.visit-count {
+    animation-delay: 0.36s;
+}
+
+.liushen-rail {
+    animation: paperFadeIn 0.68s ease 0.3s both;
+}
+
+.liushen-rail span {
+    animation: liushenSlipIn 0.46s ease both;
+}
+
+.liushen-rail span:nth-child(1) { animation-delay: 0.38s; }
+.liushen-rail span:nth-child(2) { animation-delay: 0.44s; }
+.liushen-rail span:nth-child(3) { animation-delay: 0.5s; }
+.liushen-rail span:nth-child(4) { animation-delay: 0.56s; }
+.liushen-rail span:nth-child(5) { animation-delay: 0.62s; }
+.liushen-rail span:nth-child(6) { animation-delay: 0.68s; }
+
+.header .container::after {
+    transform-origin: left center;
+    animation: ruleBrushIn 0.76s ease 0.24s both;
+}
+
+.oracle-panel {
+    transform-origin: center top;
+    animation: scrollSheetIn 0.86s cubic-bezier(0.2, 0.8, 0.22, 1) 0.42s both;
+}
+
+.oracle-panel::after {
+    animation: innerRuleIn 0.72s ease 0.76s both;
+}
+
+.oracle-panel-copy,
+.oracle-controls {
+    animation: inkRiseIn 0.68s ease 0.62s both;
+}
+
+.history-toggle-btn,
+.seo-section {
+    animation: inkRiseIn 0.58s ease 0.78s both;
+}
+
+@keyframes sealDropIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.88) rotate(-10deg);
+    }
+    70% {
+        opacity: 1;
+        transform: translateY(1px) scale(1.03) rotate(-2deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(-3deg);
+    }
+}
+
+@keyframes inkRiseIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes paperFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes liushenSlipIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes ruleBrushIn {
+    from {
+        opacity: 0;
+        transform: scaleX(0.16);
+    }
+    to {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+@keyframes scrollSheetIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scaleY(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+}
+
+@keyframes innerRuleIn {
+    from {
+        opacity: 0;
+        transform: scaleX(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .brand-mark,
+    .header-copy .eyebrow,
+    .header h1,
+    .header .subtitle,
+    .visit-count,
+    .liushen-rail,
+    .liushen-rail span,
+    .header .container::after,
+    .oracle-panel,
+    .oracle-panel::after,
+    .oracle-panel-copy,
+    .oracle-controls,
+    .history-toggle-btn,
+    .seo-section {
+        animation: none;
+    }
+
+    .divination-btn {
+        transition: none;
+    }
+
+    .divination-btn:hover {
+        transform: rotate(-1deg);
+    }
 }
 
 .result-section {
